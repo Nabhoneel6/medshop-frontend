@@ -4,9 +4,9 @@ A full-stack MERN e-commerce app for buying medicines online. Includes authentic
 
 ## 🚀 Live Demo
 
-- **Frontend:** [your-vercel-url.vercel.app]
-- **Backend API:** [your-render-url.onrender.com]
-- **Admin login:** `karnabhooneel@gmail.com` / `test1234`
+- **Frontend:** https://medshop-frontend.vercel.app/
+- **Backend API:** https://dashboard.render.com/web/srv-dav9k6flot8c73cr3ok0/deploys
+
 
 ## ✨ Features
 
