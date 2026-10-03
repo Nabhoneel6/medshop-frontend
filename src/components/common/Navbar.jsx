@@ -71,9 +71,15 @@ export default function Navbar() {
               >
                 My Orders
               </Link>
-              <span className="text-sm font-medium text-gray-700 hidden md:inline">
+
+              {/* Profile link (was span) */}
+              <Link
+                to="/profile"
+                className="text-sm font-medium text-gray-700 hover:text-primary hidden md:inline"
+              >
                 Hi, {user.name.split(" ")[0]}
-              </span>
+              </Link>
+
               <button
                 onClick={handleLogout}
                 className="text-gray-700 hover:text-red-500"

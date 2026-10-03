@@ -18,12 +18,19 @@ import Address from "../pages/Address";
 import OrderDetail from "../pages/OrderDetail";
 import MyOrders from "../pages/MyOrders";
 import AdminOrders from "../pages/AdminOrders";
+import Profile from "../pages/Profile";
+import AdminLayout from "../layouts/AdminLayout";
+import AdminUsers from "../pages/AdminUsers";
+import AdminDashboard from "../pages/AdminDashboard";
+import AdminMedicines from "../pages/AdminMedicines";
+import AdminDoctors from "../pages/AdminDoctors";
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
         {/* Public */}
+        <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:id" element={<ProductDetail />} />
@@ -46,7 +53,13 @@ export default function AppRoutes() {
         <Route path="/orders/:id" element={<OrderDetail />} />
 
         {/* Admin */}
-        <Route path="/admin/orders" element={<AdminOrders />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="medicines" element={<AdminMedicines />} />
+          <Route path="doctors" element={<AdminDoctors />} />
+        </Route>
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

@@ -1,8 +1,28 @@
-import { doctors, specialties } from "../data/medicines";
+import { useEffect, useState } from "react";
+import { getDoctors } from "../services/doctorService";
+import { specialties } from "../data/medicines";
 import { FiStar, FiVideo } from "react-icons/fi";
 import toast from "react-hot-toast";
 
 export default function DoctorConsult() {
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await getDoctors();
+        setDoctors(data);
+      } catch (err) {
+        console.error("Failed to load doctors:", err);
+        toast.error("Failed to load doctors");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <div>
       {/* HERO */}
@@ -57,47 +77,58 @@ export default function DoctorConsult() {
         <h2 className="text-2xl font-bold mb-6">
           Doctor consult in <span className="text-emerald-600">18 mins</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {doctors.map((d) => (
-            <div
-              key={d.id}
-              className="bg-white p-5 rounded-lg shadow-sm border hover:shadow-lg transition"
-            >
-              <div className="flex gap-4">
-                <img
-                  src={d.image}
-                  alt={d.name}
-                  className="w-20 h-20 rounded-full object-cover border-2 border-sky-100"
-                />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800">{d.name}</h3>
-                  <p className="text-sm text-emerald-600 font-medium">
-                    {d.specialty}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {d.experience} · {d.qualification}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2 text-xs">
-                    <span className="flex items-center gap-1 text-yellow-500">
-                      <FiStar fill="currentColor" /> {d.rating}
-                    </span>
+
+        {loading ? (
+          <div className="text-center py-12 text-gray-500">
+            Loading doctors...
+          </div>
+        ) : doctors.length === 0 ? (
+          <p className="text-center py-12 text-gray-500">
+            No doctors available right now.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {doctors.map((d) => (
+              <div
+                key={d._id}
+                className="bg-white p-5 rounded-lg shadow-sm border hover:shadow-lg transition"
+              >
+                <div className="flex gap-4">
+                  <img
+                    src={d.image || "https://via.placeholder.com/80"}
+                    alt={d.name}
+                    className="w-20 h-20 rounded-full object-cover border-2 border-sky-100"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-800">{d.name}</h3>
+                    <p className="text-sm text-emerald-600 font-medium">
+                      {d.specialty}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {d.experience} · {d.qualification}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2 text-xs">
+                      <span className="flex items-center gap-1 text-yellow-500">
+                        <FiStar fill="currentColor" /> {d.rating}
+                      </span>
+                    </div>
                   </div>
                 </div>
+                <div className="flex items-center justify-between mt-4 pt-4 border-t">
+                  <span className="font-bold text-primary">₹{d.fee}</span>
+                  <button
+                    onClick={() =>
+                      toast.success(`Consultation booked with ${d.name}`)
+                    }
+                    className="bg-white border border-emerald-600 text-emerald-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-50 flex items-center gap-1"
+                  >
+                    <FiVideo /> Consult Now
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                <span className="font-bold text-primary">₹{d.fee}</span>
-                <button
-                  onClick={() =>
-                    toast.success(`Consultation booked with ${d.name}`)
-                  }
-                  className="bg-white border border-emerald-600 text-emerald-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-50 flex items-center gap-1"
-                >
-                  <FiVideo /> Consult Now
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

@@ -40,3 +40,33 @@ export const fetchProfile = async () => {
   const { data } = await api.get("/auth/me");
   return data.user;
 };
+
+// Update profile (name, phone)
+export const updateProfile = async (profileData) => {
+  const { data } = await api.put("/auth/profile", profileData);
+  if (data.user) {
+    localStorage.setItem("user", JSON.stringify(data.user));
+  }
+  return data.user;
+};
+
+// Change password
+export const changePassword = async (currentPassword, newPassword) => {
+  const { data } = await api.put("/auth/password", {
+    currentPassword,
+    newPassword,
+  });
+  return data;
+};
+
+// Add new address
+export const addAddress = async (address) => {
+  const { data } = await api.post("/auth/addresses", address);
+  return data.addresses;
+};
+
+// Delete address
+export const deleteAddress = async (addressId) => {
+  const { data } = await api.delete(`/auth/addresses/${addressId}`);
+  return data.addresses;
+};

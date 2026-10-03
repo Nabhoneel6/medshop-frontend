@@ -5,6 +5,10 @@ import {
   logoutUser,
   getStoredUser,
   fetchProfile,
+  updateProfile as updateProfileApi,
+  changePassword as changePasswordApi,
+  addAddress as addAddressApi,
+  deleteAddress as deleteAddressApi,
 } from "../services/authService";
 
 const AuthContext = createContext();
@@ -13,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(getStoredUser());
   const [loading, setLoading] = useState(false);
 
-  // On mount, refresh user from server (in case role/data changed)
+  // On mount, refresh user from server
   useEffect(() => {
     const refresh = async () => {
       const token = localStorage.getItem("token");
@@ -23,7 +27,6 @@ export const AuthProvider = ({ children }) => {
         setUser(freshUser);
         localStorage.setItem("user", JSON.stringify(freshUser));
       } catch {
-        // Invalid token — clear it
         logoutUser();
         setUser(null);
       }
@@ -68,6 +71,32 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Update profile (name, phone)
+  const updateProfile = async (data) => {
+    const updated = await updateProfileApi(data);
+    setUser(updated);
+    return updated;
+  };
+
+  // Change password
+  const changePassword = async (currentPassword, newPassword) => {
+    return await changePasswordApi(currentPassword, newPassword);
+  };
+
+  // Add address
+  const addAddress = async (address) => {
+    const updated = await addAddressApi(address);
+    setUser((prev) => ({ ...prev, addresses: updated }));
+    return updated;
+  };
+
+  // Delete address
+  const deleteAddress = async (addressId) => {
+    const updated = await deleteAddressApi(addressId);
+    setUser((prev) => ({ ...prev, addresses: updated }));
+    return updated;
+  };
+
   const isAuthenticated = !!user;
   const isAdmin = user?.role === "admin";
 
@@ -79,6 +108,10 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        updateProfile,
+        changePassword,
+        addAddress,
+        deleteAddress,
         isAuthenticated,
         isAdmin,
       }}
