@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FiSearch, FiUpload } from "react-icons/fi";
 import ProductCard from "../components/product/ProductCard";
 import { getMedicines, getCategories } from "../services/productService";
+import { useAuth } from "../context/AuthContext";
 import OfferStrip from "../components/home/OfferStrip";
 import PrescriptionBar from "../components/home/PrescriptionBar";
 import WhyChooseUs from "../components/home/WhyChooseUs";
@@ -10,6 +11,7 @@ import Testimonials from "../components/home/Testimonials";
 import HealthArticlePreview from "../components/home/HealthArticlePreview";
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
   const [featured, setFeatured] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -153,13 +155,31 @@ export default function Home() {
           <h2 className="text-2xl md:text-3xl font-bold mb-3">
             Get Medicines Delivered at Your Doorstep
           </h2>
-          <p className="mb-6">Sign up and get 25% off on your first order</p>
-          <Link
-            to="/register"
-            className="inline-block bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100"
-          >
-            Create Account
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <p className="mb-6">
+                Browse more medicines and enjoy free delivery above ₹500
+              </p>
+              <Link
+                to="/shop"
+                className="inline-block bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100"
+              >
+                Continue Shopping
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="mb-6">
+                Sign up and get 25% off on your first order
+              </p>
+              <Link
+                to="/register"
+                className="inline-block bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100"
+              >
+                Create Account
+              </Link>
+            </>
+          )}
         </div>
       </section>
     </div>
